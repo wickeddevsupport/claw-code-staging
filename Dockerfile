@@ -1,4 +1,4 @@
-FROM rust:1.86-bookworm AS builder
+FROM rust:1.88-bookworm AS builder
 
 ARG CLAW_CODE_REF=9ade3a70d70ae690ae15d3c8f1de7e6d03d87a2a
 
