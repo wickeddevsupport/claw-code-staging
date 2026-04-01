@@ -21,9 +21,11 @@ ARG CONTINUE_EXTENSION=Continue.continue
 ARG CLINE_EXTENSION=saoudrizwan.claude-dev
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    bash ca-certificates git ripgrep less procps python3 make g++ curl caddy \
+    bash ca-certificates git ripgrep less procps python3 make g++ curl caddy tar gzip \
   && rm -rf /var/lib/apt/lists/* \
-  && npm install -g --unsafe-perm code-server@${CODE_SERVER_VERSION}
+  && curl -fsSL "https://github.com/coder/code-server/releases/download/v${CODE_SERVER_VERSION}/code-server-${CODE_SERVER_VERSION}-linux-amd64.tar.gz" \
+    | tar -xz -C /opt \
+  && ln -s "/opt/code-server-${CODE_SERVER_VERSION}-linux-amd64/bin/code-server" /usr/local/bin/code-server
 
 RUN useradd -m -u 10001 -s /bin/bash claw
 WORKDIR /workspace
