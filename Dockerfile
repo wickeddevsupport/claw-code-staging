@@ -17,7 +17,7 @@ RUN cargo build --release -p rusty-claude-cli
 FROM node:22-bookworm-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    bash ca-certificates git ripgrep less procps python3 make g++ curl \
+    bash ca-certificates git ripgrep less procps python3 make g++ curl caddy \
   && rm -rf /var/lib/apt/lists/* \
   && npm install -g wetty
 
@@ -26,11 +26,13 @@ WORKDIR /workspace
 
 COPY --from=builder /src/repo/rust/target/release/claw /usr/local/bin/claw
 COPY launch.sh /usr/local/bin/launch-claw.sh
-RUN chmod +x /usr/local/bin/launch-claw.sh && chown -R claw:claw /workspace
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/launch-claw.sh /usr/local/bin/entrypoint.sh && chown -R claw:claw /workspace
 
 USER claw
 ENV HOME=/home/claw
 ENV PORT=3000
+ENV WETTY_PORT=3001
 EXPOSE 3000
 
-CMD ["/bin/bash", "-lc", "exec wetty --host 0.0.0.0 --port ${PORT:-3000} --base / --command /usr/local/bin/launch-claw.sh"]
+CMD ["/usr/local/bin/entrypoint.sh"]
