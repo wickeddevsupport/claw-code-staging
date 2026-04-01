@@ -9,7 +9,7 @@ export BASIC_AUTH_PASSWORD="${BASIC_AUTH_PASSWORD:-change-me-now}"
 HASH="$(caddy hash-password --plaintext "$BASIC_AUTH_PASSWORD")"
 
 cat > /tmp/Caddyfile <<EOF
-:{$PORT} {
+:${PORT} {
   encode gzip zstd
 
   handle /health* {
