@@ -59,16 +59,24 @@ cat > /tmp/Caddyfile <<EOF
     respond "ok" 200
   }
 
-  handle {
+  route {
     basicauth {
       ${BASIC_AUTH_USER} ${HASH}
     }
-    reverse_proxy 127.0.0.1:${CODE_SERVER_PORT}
+
+    handle_path /startup-log* {
+      root * /tmp
+      file_server
+    }
+
+    handle {
+      reverse_proxy 127.0.0.1:${CODE_SERVER_PORT}
+    }
   }
 }
 EOF
 
-code-server /workspace --config /home/claw/.config/code-server/config.yaml --disable-telemetry --disable-update-check &
+code-server /workspace --config /home/claw/.config/code-server/config.yaml --disable-telemetry --disable-update-check --log trace >/tmp/code-server.log 2>&1 &
 CODE_SERVER_PID=$!
 
 cleanup() {
