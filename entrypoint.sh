@@ -76,7 +76,12 @@ cat > /tmp/Caddyfile <<EOF
 }
 EOF
 
-code-server /workspace --config /home/claw/.config/code-server/config.yaml --disable-telemetry --disable-update-check --log trace >/tmp/code-server.log 2>&1 &
+env -u PORT code-server /workspace \
+  --config /home/claw/.config/code-server/config.yaml \
+  --bind-addr 127.0.0.1:${CODE_SERVER_PORT} \
+  --disable-telemetry \
+  --disable-update-check \
+  --log trace >/tmp/code-server.log 2>&1 &
 CODE_SERVER_PID=$!
 
 cleanup() {
