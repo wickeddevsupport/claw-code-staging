@@ -23,7 +23,7 @@ ARG CLINE_EXTENSION=saoudrizwan.claude-dev
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bash ca-certificates git ripgrep less procps python3 make g++ curl caddy \
   && rm -rf /var/lib/apt/lists/* \
-  && npm install -g code-server@${CODE_SERVER_VERSION}
+  && npm install -g --unsafe-perm code-server@${CODE_SERVER_VERSION}
 
 RUN useradd -m -u 10001 -s /bin/bash claw
 WORKDIR /workspace
